@@ -23,18 +23,26 @@ function TableBody(props) {
    }
   );
   return (
-      <tbody>
-        {rows}
-       </tbody>
+    <tr key={index}>
+	  <td>{row.name}</td>
+	  <td>{row.job}</td>
+	  <td>
+			<button onClick={() => 
+				props.removeCharacter(index)}>
+				Delete
+			</button>
+	  </td>
+	  </tr>
    );
 }
 
-function Table(props) {
-    return (
-      <table>
-        <TableHeader />
-        <TableBody characterData={props.characterData} />
-      </table>
-    );
+function Table (props) {
+  return (
+    <table>
+      <TableHeader />
+      <TableBody characterData={props.characterData} 
+	      removeCharacter={props.removeCharacter} />
+    </table>
+  );
 }
 export default Table;
