@@ -44,6 +44,19 @@ const users = {
     ]
  }
 
-app.get('/users', (req, res) => {
-    res.send(users);
+ app.get('/users', (req, res) => {
+    const name = req.query.name;
+    if (name != undefined){
+        let result = findUserByName(name);
+        result = {users_list: result};
+        res.send(result);
+    }
+    else{
+        res.send(users);
+    }
 });
+
+const findUserByName = (name) => { 
+    return users['users_list']
+        .filter( (user) => user['name'] === name); 
+}
