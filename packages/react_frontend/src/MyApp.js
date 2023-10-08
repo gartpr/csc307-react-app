@@ -5,16 +5,41 @@ import Form from './Form';
 function MyApp() {
   const [characters, setCharacters] = useState([]);
 
-  function removeOneCharacter (index) {
-	    const updated = characters.filter((character, i) => {
+  function removeOneCharacter (index, id) {
+	  const updated = characters.filter((character, i) => {
 	        return i !== index
-	    });
+	  });
 	  setCharacters(updated);
+    // fetch method to call delete in backend, using ID
+    fetch(`http://localhost:8000/users/${id}`, {
+      method: 'DELETE',
+    })
+    // Potential errors or success, sends to console
+    .then((res) => {
+      if (res.status === 204) {
+        // Successful deletion on the backend
+        console.log('User deleted successfully.');
+      } else if (res.status === 404) {
+        // User not found on the backend
+        console.log('User not found.');
+      } else {
+        // Handle other error cases
+        throw new Error(`Unexpected response status: ${res.status}`);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 	}
   
   function updateList(person) { 
     postUser(person)
-      .then(() => setCharacters([...characters, person]))
+    // check return code
+      .then(res => {if (res.status === 201) { return res.json()}
+                      else {throw new Error(`Unexpected response status: ${res.status}`)
+                    }
+                  })
+      .then((person) => setCharacters([...characters, person]))
       .catch((error) => {
         console.log(error);
       })
